@@ -7,7 +7,8 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
-USAGE="usage: prompt-changer [-l] [-t STYLE] [style]
+USAGE="usage: prompt-changer [-l] [-t STYLE] [style]"
+DESCRIPTION="${USAGE}
 
 The prompt-changer provides a command line tool for changing zsh prompt.
 
@@ -22,7 +23,7 @@ optional arguments:
 
 # argument check
 if [ "$#" = "0" ];then
-    echo "$USAGE"
+    echo "$DESCRIPTION"
     exit 0
 fi
 
