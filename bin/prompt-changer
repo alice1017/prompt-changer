@@ -1,0 +1,57 @@
+#!/bin/bash
+# coding: utf-8
+
+# Define argument flags
+ARG_LIST=false
+ARG_TRY=false
+ARG_TRY_VALUE=""
+
+# Define variables
+USAGE="usage: prompt-changer [-l] [-t STYLE] [style]
+
+The prompt-changer provides a command line tool for changing zsh prompt.
+
+positional arguments:
+  style          The prompt style name.
+
+optional arguments:
+  -h, --help      show this help message and exit
+  -l, --list      Display the prompt styles list
+  -t STYLE, --try STYLE
+                  You can try a prompt style in new shell process"
+
+# argument check
+if [ "$#" = "0" ];then
+    echo "$USAGE"
+    exit 0
+fi
+
+# getopt
+while getopts lt: OPT
+do
+    case $OPT in
+        "l" )
+            ARG_LIST=true
+            ;;
+        "t" )
+            ARG_TRY=true
+            ARG_TRY_VALUE="$OPTARG"
+            ;;
+        * )
+            echo "$USAGE"
+            exit 0
+            ;;
+    esac
+done
+
+# shift options
+shift `expr $OPTIND - 1`
+
+# debug print
+echo "===== DEBUG PRINT ====="
+echo '  * $1'" -> $1"
+echo '  * $#'" -> "$#""
+echo "  * OPTIND -> "$OPTIND""
+echo "  * ARG_LIST -> "$ARG_LIST""
+echo "  * ARG_TRY -> "$ARG_TRY""
+echo "  * ARG_TRY_VALUE -> "$ARG_TRY_VALUE""
