@@ -58,6 +58,17 @@ done
 shift `expr $OPTIND - 1`
 PROMPT_STYLE=$1
 
+
+# 1. '-l' argument behavior
+if $ARG_LIST;then
+    echo "prompt styles:"
+    ls "$PROMPTS_DIR" \
+        | cut -d "." -f 1 \
+        | xargs -I % -n 1 echo "  * %" \
+        | column
+    exit $?
+fi
+
 # debug print
 echo "===== DEBUG PRINT ====="
 echo '  * $#'" -> "$#""
