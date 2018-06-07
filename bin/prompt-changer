@@ -7,7 +7,7 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
-USAGE="usage: prompt-changer [-l] [-t STYLE] [style]"
+USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
 
 The prompt-changer provides a command line tool for changing zsh prompt.
@@ -28,7 +28,7 @@ if [ "$#" = "0" ];then
 fi
 
 # getopt
-while getopts lt: OPT
+while getopts lt:h OPT
 do
     case $OPT in
         "l" )
@@ -38,9 +38,13 @@ do
             ARG_TRY=true
             ARG_TRY_VALUE="$OPTARG"
             ;;
+        "h" )
+            echo "$DESCRIPTION"
+            exit 0
+            ;;
         * )
             echo "$USAGE"
-            exit 0
+            exit 1
             ;;
     esac
 done
