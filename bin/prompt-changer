@@ -7,8 +7,13 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
+
+# TODO:
+#   - The PROMPTS_DIR variable will changes the '~/.zsh/prompts'
+#   - The ZSH_DIR variable will changes the '~/.zsh'
 ROOTDIR="$(cd $(dirname $0); pwd)"
 PROMPTS_DIR="${ROOTDIR%/}/prompts"
+ZSH_DIR="${ROOTDIR%/}/zsh"
 
 PROMPT_STYLE=""
 
@@ -71,11 +76,12 @@ fi
 
 # debug print
 echo "===== DEBUG PRINT ====="
-echo '  * $#'" -> "$#""
-echo "  * OPTIND -> "$OPTIND""
+echo '  * $#       -> '""$#""
+echo "  * OPTIND   -> "$OPTIND""
 echo "  * ARG_LIST -> "$ARG_LIST""
-echo "  * ARG_TRY -> "$ARG_TRY""
+echo "  * ARG_TRY  -> "$ARG_TRY""
 echo "  * ARG_TRY_VALUE -> "$ARG_TRY_VALUE""
 echo "  * PROMPT_STYLE  -> "$PROMPT_STYLE""
-echo "  * ROOTDIR -> "$ROOTDIR""
+echo "  * ROOTDIR     -> "$ROOTDIR""
 echo "  * PROMPTS_DIR -> "$PROMPTS_DIR""
+echo "  * ZSH_DIR     -> "$ZSH_DIR""
