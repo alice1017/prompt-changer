@@ -7,7 +7,11 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
+ROOTDIR="$(cd $(dirname $0); pwd)"
+PROMPTS_DIR="${ROOTDIR%/}/prompts"
+
 PROMPT_STYLE=""
+
 USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
 
@@ -61,4 +65,6 @@ echo "  * OPTIND -> "$OPTIND""
 echo "  * ARG_LIST -> "$ARG_LIST""
 echo "  * ARG_TRY -> "$ARG_TRY""
 echo "  * ARG_TRY_VALUE -> "$ARG_TRY_VALUE""
-echo "  * PROMPT_STYLE  -> $PROMPT_STYLE"
+echo "  * PROMPT_STYLE  -> "$PROMPT_STYLE""
+echo "  * ROOTDIR -> "$ROOTDIR""
+echo "  * PROMPTS_DIR -> "$PROMPTS_DIR""
