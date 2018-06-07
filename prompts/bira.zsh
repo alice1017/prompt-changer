@@ -1,5 +1,12 @@
 # ZSH Theme - Preview: http://gyazo.com/8becc8a7ed5ab54a0262a470555c3eed.png
 
+# Setting option
+setopt prompt_subst
+
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
 # Outputs current branch info in prompt format
 function git_prompt_info() {
   local ref

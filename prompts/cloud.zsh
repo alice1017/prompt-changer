@@ -1,3 +1,10 @@
+# Setting option
+setopt prompt_subst
+
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
 # Outputs current branch info in prompt format
 function git_prompt_info() {
   local ref
@@ -55,9 +62,8 @@ POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 DISABLE_UNTRACKED_FILES_DIRTY=true
 
 
-
-
 ZSH_THEME_CLOUD_PREFIX='☁'
+PROMPT=""
 PROMPT='%{$fg_bold[cyan]%}$ZSH_THEME_CLOUD_PREFIX %{$fg_bold[green]%}%p %{$fg[green]%}%c %{$fg_bold[cyan]%}$(git_prompt_info)%{$fg_bold[blue]%} % %{$reset_color%}'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[green]%}[%{$fg[cyan]%}"

@@ -1,5 +1,11 @@
-# the svn plugin has to be activated for this to work.
+# Setting option
+setopt prompt_subst
 
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
+# the svn plugin has to be activated for this to work.
 function svn_prompt_info() {
   local info
   info=$(svn info 2>&1) || return 1; # capture stdout and stderr

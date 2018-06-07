@@ -1,3 +1,10 @@
+# Setting option
+setopt prompt_subst
+
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
 autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' stagedstr '%F{green}●'

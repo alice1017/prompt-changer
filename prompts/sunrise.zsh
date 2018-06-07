@@ -1,6 +1,13 @@
 # Sunrise theme for oh-my-zsh
 # Intended to be used with Solarized: http://ethanschoonover.com/solarized
 
+# Setting option
+setopt prompt_subst
+
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
 # Checks if working tree is dirty
 function parse_git_dirty() {
   local STATUS=''
