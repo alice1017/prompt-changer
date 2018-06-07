@@ -86,8 +86,6 @@ relpath() {
     fi
 }
 
-exit 0
-
 # argument check
 if [ "$#" = "0" ];then
     echo "$DESCRIPTION"
