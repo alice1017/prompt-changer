@@ -13,7 +13,7 @@ ROOTDIR="$(cd $(dirname $0); pwd)"
 PROMPTS_DIR="${ROOTDIR%/}/prompts"
 
 ZSH_DIR="${HOME%/}/.zsh"
-ZSH_PROMPT_DIR="${ZSH_DIR%/}/prompts"
+ZSH_PROMPTS_DIR="${ZSH_DIR%/}/prompts"
 
 USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
@@ -31,13 +31,13 @@ optional arguments:
 
 # Define function
 sync_prompt_styles() {
-    ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${PROMPTS_DIR%/}/$" "${ZSH_PROMPT_DIR%/}/$"
+    ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${PROMPTS_DIR%/}/$" "${ZSH_PROMPTS_DIR%/}/$"
     return $?
 }
 
 check_exists_style() {
     local style=$1
-    local path="${PROMPTS_DIR%/}/${style}.zsh"
+    local path="${ZSH_PROMPTS_DIR%/}/${style}.zsh"
 
     if [ -e "$path" ];then
         return 0
@@ -73,12 +73,20 @@ relpath() {
 # Initialize
 {
     # mkdir prompt dir
-    [ -e "$ZSH_PROMPT_DIR" ] || { mkdir -p "$ZSH_PROMPT_DIR"; }
+    [ -e "$ZSH_PROMPTS_DIR" ] || { mkdir -p "$ZSH_PROMPTS_DIR"; }
 
     # sync prompt styles
     sync_prompt_styles
+
+    # setup initial symlink
+    DEFAULT_PROMPT="${ZSH_DIR%/}/prompts/simple.zsh"
+    TARGET="${ZSH_DIR%/}/prompt.zsh"
+    if [ ! -L "$TARGET" ];then
+        rm "$TARGET" && ln -s "$DEFAULT_PROMPT" "$TARGET"
+    fi
 }
 
+exit 0
 
 # argument check
 if [ "$#" = "0" ];then
@@ -128,20 +136,26 @@ if $ARG_TRY;then
 
     PROMPT_STYLE="$ARG_TRY_VALUE"
     STYLE_NAME="${PROMPT_STYLE}.zsh"
-    SRC_PATH="${PROMPTS_DIR%/}/${STYLE_NAME}"
+
+    SRC_PATH="${ZSH_PROMPTS_DIR%/}/${STYLE_NAME}"
     DEST_PATH="${ZSH_DIR%/}/prompt.zsh"
 
     # 2-1. check style exists
     check_exists_style "$PROMPT_STYLE"
+    # echo 'dp. 2-1: check_exists_style $? -> '"$?"
 
     # 2-2. get now link path
     OLD_LINK="$(readlink -f "${DEST_PATH}")"
-
-    echo "debug print at 2-2"
-    echo "OLD_LINK -> ${OLD_LINK}"
+    echo 'dp. 2-2: readlink $OLD_LINK -> '"$OLD_LINK"
 
     # 2-3. unlink & put symlink
     create_symlink "$SRC_PATH" "$DEST_PATH"
+    # echo "dp. 2-3: symlink "
+    # echo "  * SRC_PATH   -> ${SRC_PATH}"
+    # echo "  * DEST_PATH  -> ${DEST_PATH}"
+    # echo "---------------"
+    # ls -al "$ZSH_DIR"/
+    # echo "---------------"
 
     # 2-4. display msg
     echo -n "prompt-changer executes the TRY mode"
@@ -156,6 +170,12 @@ if $ARG_TRY;then
 
     # 2-6. back to old symbolic
     create_symlink "$OLD_LINK" "$DEST_PATH"
+    # echo "dp. 2-6: symlink "
+    # echo "  * OLD_LINK   -> ${OLD_LINK}"
+    # echo "  * DEST_PATH  -> ${DEST_PATH}"
+    # echo "---------------"
+    # ls -al "$ZSH_DIR"/
+    # echo "---------------"
 
     exit 0
 fi
