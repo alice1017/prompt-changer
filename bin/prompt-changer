@@ -144,7 +144,7 @@ if $ARG_TRY;then
 
     # 2-2. get now link path
     OLD_LINK="$(readlink -f "${DEST_PATH}")"
-    echo 'dp. 2-2: readlink $OLD_LINK -> '"$OLD_LINK"
+    # echo 'dp. 2-2: readlink $OLD_LINK -> '"$OLD_LINK"
 
     # 2-3. unlink & put symlink
     create_symlink "$SRC_PATH" "$DEST_PATH"
