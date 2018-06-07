@@ -7,15 +7,13 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
+PROMPT_STYLE=""
 
-# TODO:
-#   - The PROMPTS_DIR variable will changes the '~/.zsh/prompts'
-#   - The ZSH_DIR variable will changes the '~/.zsh'
 ROOTDIR="$(cd $(dirname $0); pwd)"
 PROMPTS_DIR="${ROOTDIR%/}/prompts"
-ZSH_DIR="${ROOTDIR%/}/zsh"
 
-PROMPT_STYLE=""
+ZSH_DIR="${HOME%/}/.zsh"
+ZSH_PROMPT_DIR="${ZSH_DIR%/}/prompts"
 
 USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
@@ -32,6 +30,11 @@ optional arguments:
                   You can try a prompt style in new shell process"
 
 # Define function
+sync_prompt_styles() {
+    ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${$PROMPTS_DIR%/}/$" "${ZSH_PROMPT_DIR%/}/$"
+    return $?
+}
+
 check_exists_style() {
     local style=$1
     local path="${PROMPTS_DIR%/}/${style}.zsh"
@@ -66,6 +69,16 @@ create_symlink() {
 relpath() {
     echo "$(realpath --relative-to "$(pwd)" "$1")"
 }
+
+# Initialize
+{
+    # mkdir prompt dir
+    [ -e "$ZSH_PROMPT_DIR" ] || { mkdir -p "$ZSH_PROMPT_DIR"; }
+
+    # sync prompt styles
+    sync_prompt_styles
+}
+
 
 # argument check
 if [ "$#" = "0" ];then
