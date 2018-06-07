@@ -1,5 +1,12 @@
 # vim:ft=zsh ts=2 sw=2 sts=2
 
+# Setting option
+setopt prompt_subst
+
+# Setting autoload
+autoload -Uz promptinit ; promptinit # for initialize prompt
+autoload -Uz colors     ; colors     # for colorize prompt
+
 # Outputs current branch info in prompt format
 function git_prompt_info() {
   local ref
