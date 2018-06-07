@@ -31,6 +31,23 @@ optional arguments:
   -t STYLE, --try STYLE
                   You can try a prompt style in new shell process"
 
+# Define function
+check_exists_style() {
+    local style=$1
+    local path="${PROMPTS_DIR%/}/${style}.zsh"
+
+    if [ -e "$path" ];then
+        return 0
+    else
+        echo "error: don't exists style '"$style"'" 1>&2
+        exit 1
+    fi
+}
+
+relpath() {
+    echo "$(realpath --relative-to "$(pwd)" "$1")"
+}
+
 # argument check
 if [ "$#" = "0" ];then
     echo "$DESCRIPTION"
@@ -72,6 +89,29 @@ if $ARG_LIST;then
         | xargs -I % -n 1 echo "  * %" \
         | column
     exit $?
+fi
+
+# 2. '-t style' argument behavior
+if $ARG_TRY;then
+
+    PROMPT_STYLE="$ARG_TRY_VALUE"
+    STYLE_NAME="${PROMPT_STYLE}.zsh"
+    STYLE_PATH="${PROMPTS_DIR%/}/${STYLE_NAME}"
+    DEST_PATH="${ZSH_DIR%/}/${STYLE_NAME}"
+
+    # 2-1. check style exists
+    check_exists_style "$PROMPT_STYLE"
+
+    # 2-2. get now link path
+    NOW_LINK="$(readlink -f "${ZSH_DIR%/}/prompt.zsh")"
+
+    # debug print
+    echo "NOW_LINK         -> "$NOW_LINK""
+    echo "NOW_LINK_REL     -> "$(relpath "$NOW_LINK")""
+
+    # 2-3. put symlink
+    # ln -s "${STYLE_PATH}" "${DEST_PATH}"
+    exit 1
 fi
 
 # debug print
