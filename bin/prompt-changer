@@ -44,6 +44,25 @@ check_exists_style() {
     fi
 }
 
+create_symlink() {
+    local src=$1
+    local dest=$2
+
+    # unlink or remove $dest if exists
+    if [ -e "$dest" ];then
+        unlink "$dest" || rm "$dest"
+    fi
+
+    # echo error msg if $src don't exists
+    if [ ! -e "$src" ];then
+        echo "error: can't access '"$src"'" 1>&2
+        exit 1
+    fi
+
+    ln -s "${src}" "${dest}"
+    return $?
+}
+
 relpath() {
     echo "$(realpath --relative-to "$(pwd)" "$1")"
 }
@@ -104,15 +123,12 @@ if $ARG_TRY;then
 
     # 2-2. get now link path
     OLD_LINK="$(readlink -f "${DEST_PATH}")"
-    OLD_LINK_REL="$(relpath "$OLD_LINK")"
 
     echo "debug print at 2-2"
     echo "OLD_LINK -> ${OLD_LINK}"
-    echo "OLD_LINK_REL -> ${OLD_LINK_REL}"
 
     # 2-3. unlink & put symlink
-    unlink "$DEST_PATH"
-    ln -s "$SRC_PATH" "$DEST_PATH"
+    create_symlink "$SRC_PATH" "$DEST_PATH"
 
     # 2-4. display msg
     echo -n "prompt-changer executes the TRY mode"
@@ -126,8 +142,7 @@ if $ARG_TRY;then
     "$(which zsh)"
 
     # 2-6. back to old symbolic
-    unlink "$DEST_PATH"
-    ln -s "$OLD_LINK_REL" "$DEST_PATH"
+    create_symlink "$OLD_LINK" "$DEST_PATH"
 
     exit 0
 fi
