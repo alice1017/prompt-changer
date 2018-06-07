@@ -31,7 +31,7 @@ optional arguments:
 
 # Define function
 sync_prompt_styles() {
-    ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${$PROMPTS_DIR%/}/$" "${ZSH_PROMPT_DIR%/}/$"
+    ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${PROMPTS_DIR%/}/$" "${ZSH_PROMPT_DIR%/}/$"
     return $?
 }
 
