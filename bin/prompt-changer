@@ -7,6 +7,7 @@ ARG_TRY=false
 ARG_TRY_VALUE=""
 
 # Define variables
+PROMPT_STYLE=""
 USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
 
@@ -51,12 +52,13 @@ done
 
 # shift options
 shift `expr $OPTIND - 1`
+PROMPT_STYLE=$1
 
 # debug print
 echo "===== DEBUG PRINT ====="
-echo '  * $1'" -> $1"
 echo '  * $#'" -> "$#""
 echo "  * OPTIND -> "$OPTIND""
 echo "  * ARG_LIST -> "$ARG_LIST""
 echo "  * ARG_TRY -> "$ARG_TRY""
 echo "  * ARG_TRY_VALUE -> "$ARG_TRY_VALUE""
+echo "  * PROMPT_STYLE  -> $PROMPT_STYLE"
