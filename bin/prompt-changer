@@ -161,7 +161,8 @@ if $ARG_TRY;then
     printf "\x1b[1;31mexit\x1b[0m' in your shell.\n" # RED
 
     # execute sub shell
-    which zsh
+    # shellcheck disable=SC2091
+    $(which zsh)
 
     # back to old symbolic
     create_symlink "$OLD_LINK" "$DEST_PATH"
