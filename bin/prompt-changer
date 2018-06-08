@@ -9,7 +9,7 @@ ARG_TRY_VALUE=""
 # Define variables
 PROMPT_STYLE=""
 
-ROOTDIR="$(cd $(dirname $0); pwd)"
+ROOTDIR="$(cd "$(dirname "$0")"; pwd)"
 PROMPTS_DIR="${ROOTDIR%/}/prompts"
 
 ZSH_DIR="${HOME%/}/.zsh"
@@ -31,6 +31,7 @@ optional arguments:
 
 # Define function
 sync_prompt_styles() {
+    # shellcheck disable=SC2011
     ls "$PROMPTS_DIR" | xargs -n 1 -I $ cp -f "${PROMPTS_DIR%/}/$" "${ZSH_PROMPTS_DIR%/}/$"
     return $?
 }
@@ -42,7 +43,7 @@ check_exists_style() {
     if [ -e "$path" ];then
         return 0
     else
-        echo "error: don't exists style '"$style"'" 1>&2
+        echo "error: don't exists style '$style'" 1>&2
         exit 1
     fi
 }
@@ -58,16 +59,12 @@ create_symlink() {
 
     # echo error msg if $src don't exists
     if [ ! -e "$src" ];then
-        echo "error: can't access '"$src"'" 1>&2
+        echo "error: can't access '$src'" 1>&2
         exit 1
     fi
 
     ln -s "${src}" "${dest}"
     return $?
-}
-
-relpath() {
-    echo "$(realpath --relative-to "$(pwd)" "$1")"
 }
 
 # Initialize
@@ -115,13 +112,13 @@ do
 done
 
 # shift options
-shift `expr $OPTIND - 1`
-PROMPT_STYLE=$1
+shift $((OPTIND - 1))
 
 
-# 1. '-l' argument behavior
+# '-l' argument behavior
 if $ARG_LIST;then
     echo "prompt styles:"
+    # shellcheck disable=SC2012
     ls "$PROMPTS_DIR" \
         | cut -d "." -f 1 \
         | xargs -I % -n 1 echo "  * %" \
@@ -129,63 +126,60 @@ if $ARG_LIST;then
     exit $?
 fi
 
-# 2. '-t style' argument behavior
+# define PROMPT_STYLE
 if $ARG_TRY;then
-
     PROMPT_STYLE="$ARG_TRY_VALUE"
-    STYLE_NAME="${PROMPT_STYLE}.zsh"
+else
+    PROMPT_STYLE="$1"
+fi
 
+# Common process
+{
+    # define variables
+    STYLE_NAME="${PROMPT_STYLE}.zsh"
     SRC_PATH="${ZSH_PROMPTS_DIR%/}/${STYLE_NAME}"
     DEST_PATH="${ZSH_DIR%/}/prompt.zsh"
 
-    # 2-1. check style exists
+    # check exists style
     check_exists_style "$PROMPT_STYLE"
-    # echo 'dp. 2-1: check_exists_style $? -> '"$?"
 
-    # 2-2. get now link path
+    # get old link
     OLD_LINK="$(readlink -f "${DEST_PATH}")"
-    # echo 'dp. 2-2: readlink $OLD_LINK -> '"$OLD_LINK"
 
-    # 2-3. unlink & put symlink
+    # create symlink to selected prompt
     create_symlink "$SRC_PATH" "$DEST_PATH"
-    # echo "dp. 2-3: symlink "
-    # echo "  * SRC_PATH   -> ${SRC_PATH}"
-    # echo "  * DEST_PATH  -> ${DEST_PATH}"
-    # echo "---------------"
-    # ls -al "$ZSH_DIR"/
-    # echo "---------------"
+}
 
-    # 2-4. display msg
+# '-t style' argument behavior
+if $ARG_TRY;then
+
     echo -n "prompt-changer executes the TRY mode "
     echo -n "by this prompt style: "
-    printf "\x1b[1;33m${PROMPT_STYLE}\x1b[0m\n" # YELLOW
+    printf "\x1b[1;33m%s\x1b[0m\n" "$PROMPT_STYLE" # YELLOW
 
     echo -n "If you want to exit this mode, please input '"
     printf "\x1b[1;31mexit\x1b[0m' in your shell.\n" # RED
 
-    # 2-5. execute sub shell
-    "$(which zsh)"
+    # execute sub shell
+    which zsh
 
-    # 2-6. back to old symbolic
+    # back to old symbolic
     create_symlink "$OLD_LINK" "$DEST_PATH"
-    # echo "dp. 2-6: symlink "
-    # echo "  * OLD_LINK   -> ${OLD_LINK}"
-    # echo "  * DEST_PATH  -> ${DEST_PATH}"
-    # echo "---------------"
-    # ls -al "$ZSH_DIR"/
-    # echo "---------------"
+    exit $?
 
-    exit 0
+else
+    source ~/.zshrc
+    exit $?
 fi
 
 # debug print
 echo "===== DEBUG PRINT ====="
-echo '  * $#       -> '""$#""
-echo "  * OPTIND   -> "$OPTIND""
-echo "  * ARG_LIST -> "$ARG_LIST""
-echo "  * ARG_TRY  -> "$ARG_TRY""
-echo "  * ARG_TRY_VALUE -> "$ARG_TRY_VALUE""
-echo "  * PROMPT_STYLE  -> "$PROMPT_STYLE""
-echo "  * ROOTDIR     -> "$ROOTDIR""
-echo "  * PROMPTS_DIR -> "$PROMPTS_DIR""
-echo "  * ZSH_DIR     -> "$ZSH_DIR""
+echo '  * $#       -> '"$#"
+echo "  * OPTIND   -> $OPTIND"
+echo "  * ARG_LIST -> $ARG_LIST"
+echo "  * ARG_TRY  -> $ARG_TRY"
+echo "  * ARG_TRY_VALUE -> $ARG_TRY_VALUE"
+echo "  * PROMPT_STYLE  -> $PROMPT_STYLE"
+echo "  * ROOTDIR     -> $ROOTDIR"
+echo "  * PROMPTS_DIR -> $PROMPTS_DIR"
+echo "  * ZSH_DIR     -> $ZSH_DIR"
