@@ -168,7 +168,7 @@ if $ARG_TRY;then
     exit $?
 
 else
-    source ~/.zshrc
+    exec "$(which zsh)" -l
     exit $?
 fi
 
