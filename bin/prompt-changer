@@ -9,7 +9,12 @@ ARG_TRY_VALUE=""
 # Define variables
 PROMPT_STYLE=""
 
-ROOTDIR="$(cd "$(dirname "$0")"; pwd)"
+if which prompt-changer > /dev/null 2>&1;then
+    ROOTDIR="$(dirname "$(dirname "$(readlink -f "$(which prompt-changer)")")")"
+else
+    ROOTDIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+fi
+
 PROMPTS_DIR="${ROOTDIR%/}/prompts"
 
 ZSH_DIR="${HOME%/}/.zsh"
