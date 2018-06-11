@@ -5,6 +5,7 @@
 ARG_LIST=false
 ARG_TRY=false
 ARG_TRY_VALUE=""
+ARG_CURRENT=false
 
 # Define variables
 PROMPT_STYLE=""
@@ -20,7 +21,7 @@ PROMPTS_DIR="${ROOTDIR%/}/prompts"
 ZSH_DIR="${HOME%/}/.zsh"
 ZSH_PROMPTS_DIR="${ZSH_DIR%/}/prompts"
 
-USAGE="usage: prompt-changer [-h] [-l] [-t STYLE] [style]"
+USAGE="usage: prompt-changer [-h] [-l] [-c] [-t STYLE] [style]"
 DESCRIPTION="${USAGE}
 
 The prompt-changer provides a command line tool for changing zsh prompt.
@@ -31,6 +32,7 @@ positional arguments:
 optional arguments:
   -h, --help      show this help message and exit
   -l, --list      Display the prompt styles list
+  -c, --current   Output the current prompt style
   -t STYLE, --try STYLE
                   You can try a prompt style in new shell process"
 
@@ -95,7 +97,7 @@ if [ "$#" = "0" ];then
 fi
 
 # getopt
-while getopts lt:h OPT
+while getopts lct:h OPT
 do
     case $OPT in
         "l" )
@@ -104,6 +106,9 @@ do
         "t" )
             ARG_TRY=true
             ARG_TRY_VALUE="$OPTARG"
+            ;;
+        "c" )
+            ARG_CURRENT=true
             ;;
         "h" )
             echo "$DESCRIPTION"
@@ -129,6 +134,12 @@ if $ARG_LIST;then
         | xargs -I % -n 1 echo "  * %" \
         | column
     exit $?
+fi
+
+# '-c' argument behavior
+if $ARG_CURRENT;then
+    echo "$(basename "$(readlink -f ~/.zsh/prompt.zsh)" | cut -d '.' -f 1)"
+    exit 0
 fi
 
 # define PROMPT_STYLE
