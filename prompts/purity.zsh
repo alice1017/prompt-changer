@@ -48,7 +48,7 @@ function git_prompt_status() {
     STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
   fi
   if $(echo "$INDEX" | grep '^## [^ ]\+ .*ahead' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_AHEAD$STATUS"
+    STATUS="${ZSH_THEME_GIT_PROMPT_AHEAD:-}$STATUS"
   fi
   if $(echo "$INDEX" | grep '^## [^ ]\+ .*behind' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_BEHIND$STATUS"
@@ -227,6 +227,8 @@ prompt_purity_setup() {
 	ZSH_THEME_GIT_PROMPT_RENAMED="%F{magenta}➜%f "
 	ZSH_THEME_GIT_PROMPT_UNMERGED="%F{yellow}═%f "
 	ZSH_THEME_GIT_PROMPT_UNTRACKED="%F{cyan}✩%f "
+    ZSH_THEME_GIT_PROMPT_AHEAD="%{↑%G%}"
+    ZSH_THEME_GIT_PROMPT_BEHIND="%{↓%G%}"
 
 	# prompt turns red if the previous command didn't exit with 0
 	PROMPT='%F{blue}%c$(git_prompt_info) $(git_prompt_status) %(?.%F{green}.%F{red})❯%f '
