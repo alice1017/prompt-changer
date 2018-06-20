@@ -2,6 +2,26 @@
 
 The **prompt-changer** provides a command line tool for changing **zsh prompt**.
 
+## Installation
+
+```
+$ git clone https://github.com/alice1017/prompt-changer.git
+$ cd prompt-changer
+$ sudo install -v -m 755 bin/prompt-changer /usr/local/bin/
+```
+
+## Prepare for use
+
+```
+$ mkdir -p ~/.zsh
+$ echo "source ~/.zsh/prompt.zsh" >> ~/.zshrc
+```
+
+The prompt-changer can't change the prompt **without** `~/.zsh` directory.
+Because the prompt-changer creates a **symlink** to zsh script at `~/.zsh/prompt.zsh`
+
+And, you need to **insert the 'source' sentence** to`.zshrc` for loading `~/.zsh/prompt.zsh`
+
 ## Usage
 
 ```
@@ -20,32 +40,4 @@ optional arguments:
                   You can try a prompt style in new shell process
 ```
 
-## Workflow for use
-
-### 1. Directory structure
-
-The prompt-changer can't change the prompt style ***without the following directory tree***.
-
-```
-~
-└──  .zsh/
-```
-
-Because the prompt-changer creates a **symlink** to `.zsh` script at `~/.zsh/prompt.zsh`.
-
-### 2. Insert a sentence to zshrc
-
-For use prompt-chenger, you need to ***insert the following sentence*** to your `zshrc`.
-
-```
-source ~/.zsh/prompt.zsh
-```
-
-## Installation
-
-```
-$ git clone https://github.com/alice1017/prompt-changer.git
-$ cd prompt-changer
-$ sudo install -v -m 755 bin/prompt-changer /usr/local/bin/
-```
 
