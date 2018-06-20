@@ -2,6 +2,8 @@
 
 The **prompt-changer** provides a command line tool for changing **zsh prompt**.
 
+[![asciicast](https://asciinema.org/a/187883.png)](https://asciinema.org/a/187883)
+
 ## Installation
 
 ```
